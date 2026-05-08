@@ -1,93 +1,404 @@
-# ai-plc-workflow
+# AI-PLC — Product Discovery, Strategy and Prototyping
 
+> [!IMPORTANT]
+> Generative AI can make mistakes. Review all output and validate product decisions before acting on them.
 
+AI-PLC is a guided workflow that helps Product Managers, business leaders, and other non-technical roles define product strategy and determine what applications should be built for their business. It takes you from customer insights to validated prototypes — all within a single AI-assisted session. It covers pain point analysis, use case prioritization, PR/FAQ creation (Working Backwards), product strategy, and prototype generation.
 
-## Getting started
+The workflow is flexible — you can start from wherever you are. Whether you're exploring customer pain points for the first time, already have a list of use cases to evaluate, or want to jump straight into building prototypes from existing specifications. You can complete the entire journey in one session, or generate portable PROTOTYPE-*.md files and share them with other teams to build prototypes in their own workspace.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+The workflows are also fully customizable to your needs — they are defined in markdown files that you can edit to adjust questions, scoring frameworks, output formats, or add domain-specific guidance for your organization.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+---
 
-## Add your files
+## Table of Contents
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+- [Three Ways to Start](#three-ways-to-start)
+- [Prerequisites](#prerequisites)
+- [Download the Repository](#download-the-repository)
+- [Setup for Your Tool](#setup-for-your-tool)
+- [Start the Workflow](#start-the-workflow)
+- [What Happens After Discovery?](#what-happens-after-discovery)
+
+---
+
+## Three Ways to Start
+
+AI-PLC supports three entry points — from broad exploration to focused execution. Choose based on where you are in your product thinking:
+
+### Entry Point 1: Start from Customer Pain Points
+
+**You have**: Customer feedback, reviews, research, or a general problem area to explore.
+
+**What happens**: The AI guides you through gathering pain points (from URLs, free-form text, or structured questions), creates a PR/FAQ using the Working Backwards method, analyzes potential solutions, and generates prototype specifications.
+
+**Best for**: Teams starting fresh, exploring a new problem space, or wanting to validate customer needs before building.
+
+### Entry Point 2: Start from Use Cases
+
+**You have**: Multiple use case ideas (3, 5, 10, or 20+) that need evaluation and prioritization.
+
+**What happens**: The AI helps you document all use cases, scores them using prioritization frameworks (separate frameworks for agentic vs. application use cases), selects the top 3, and generates PROTOTYPE-*.md specifications for each.
+
+**Best for**: Teams with many ideas that need a structured way to pick the best ones.
+
+### Entry Point 3: Build from Existing Prototype Specs
+
+**You have**: PROTOTYPE-*.md files already generated (from a previous session or shared by another team).
+
+**What happens**: Skips all discovery and goes straight to building prototypes from the specifications.
+
+**Best for**: Teams who received PROTOTYPE-*.md files from another group, or picking up where a previous session left off.
+
+---
+
+### Key Features
+
+| Feature | Description |
+|---|---|
+| **PM-Focused** | No coding required — focuses on product vision and decisions |
+| **Three Entry Points** | Start from pain points, use cases, or existing prototype specs |
+| **Scalable** | Supports any number of use cases (3, 5, 10, 20+) |
+| **Team-Friendly** | PROTOTYPE-*.md files are portable and shareable across teams |
+| **Auditable** | Complete trail of all decisions in `audit.md` |
+| **Handoff-Ready** | Discovery Document ready for developer teams |
+
+### Example Scenarios
+
+**Customer-Driven Discovery**
+1. PM collects customer reviews from Yelp, Trustpilot, or internal research
+2. Starts from Entry Point 1 (pain points) — provides the URL
+3. AI extracts pain points, creates PR/FAQ, identifies solutions
+4. PM reviews and approves, then builds a prototype in the same session
+
+**Use Case Selection**
+1. Product team has 10 potential AI use case ideas
+2. Starts from Entry Point 2 (use cases)
+3. AI scores and ranks all 10, recommends top 3
+4. PM confirms selection, generates PROTOTYPE-*.md files
+5. Optionally builds prototypes or hands off files to engineering
+
+**Distributed Team Collaboration**
+1. A core team uses Entry Point 1 or 2 together to analyze pain points and prioritize use cases as a group
+2. The workflow generates PROTOTYPE-*.md files for the top use cases
+3. PROTOTYPE-*.md files are distributed to separate teams
+4. Each team opens their own workspace with Entry Point 3 and builds their assigned prototype independently
+5. Teams reconvene to present and compare results
+
+> **Key concept**: The workspace supports collaborative product thinking (pain point analysis, use case selection) as a team activity. Once PROTOTYPE-*.md files are generated, they become portable artifacts that can be distributed to multiple teams for parallel prototype development in separate workspaces.
+
+---
+
+## Prerequisites
+
+### Admin/Installation Permissions
+
+You will need administrator permissions on your computer to:
+- Install Git, Claude Code, or Kiro
+- Install packages during prototype building (Python, Node.js libraries are installed automatically)
+
+If you don't have admin access, ask your IT team to install the prerequisites for you.
+
+### Git (required to download this repo)
+
+**Check if you already have it:**
+```bash
+git --version
+```
+If you see a version number, you're good — skip to the next section.
+
+**Install Git if needed:**
+
+| OS | Command |
+|---|---|
+| **macOS** | Type `git --version` in Terminal — macOS will prompt you to install it |
+| **Windows** | Open Command Prompt as Administrator, run: `winget install Git.Git` |
+| **Linux** | `sudo apt update && sudo apt install git` |
+
+### Claude Code or Kiro (pick one)
+
+| Tool | What It Is | Get It Here |
+|---|---|---|
+| **Claude Code** | Anthropic's AI coding assistant (runs in your terminal) | [Install Claude Code](https://docs.anthropic.com/en/docs/claude-code/getting-started) |
+| **Kiro** | AWS's AI-powered IDE | [Install Kiro](https://kiro.dev/docs/getting-started/installation/) |
+
+---
+
+## Download the Repository
+
+**Step 1**: Open your Terminal application.
+
+- **macOS**: Open Finder → Applications → Utilities → Terminal
+- **Windows**: Press Windows key, type "Command Prompt", press Enter
+- **Linux**: Open your terminal emulator
+
+**Step 2**: Check what folder you are currently in by running this command:
+
+**macOS/Linux:**
+```bash
+pwd
+```
+
+**Windows:**
+```cmd
+cd
+```
+
+This shows you where files will be downloaded to. If you want to download somewhere specific (like your Desktop), navigate there first:
+```bash
+cd ~/Desktop
+```
+
+**Step 3**: Download the repository:
+
+```bash
+git clone https://github.com/YOUR-ORG/sample-aws-ai-plc.git
+```
+
+This creates a folder called `sample-aws-ai-plc` containing all the workflow files.
+
+---
+
+## What's Inside the Download
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.aws.dev/chadhrac/ai-plc-workflow.git
-git branch -M main
-git push -uf origin main
+sample-aws-ai-plc/
+├── aiplc-rules/
+│   ├── aws-aiplc-rules/
+│   │   └── core-workflow.md              ← Main workflow instructions
+│   └── aws-aiplc-rule-details/           ← Supporting rules (loaded as needed)
+│       ├── common/
+│       ├── discovery/
+│       └── inception/
+└── README.md                              ← This file
 ```
 
-## Integrate with your tools
+---
 
-- [ ] [Set up project integrations](https://gitlab.aws.dev/chadhrac/ai-plc-workflow/-/settings/integrations)
+## Setup for Your Tool
 
-## Collaborate with your team
+- [Claude Code](#claude-code)
+- [Kiro](#kiro)
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+---
 
-## Test and Deploy
+### Claude Code
 
-Use the built-in continuous integration in GitLab.
+Claude Code uses a `CLAUDE.md` file in your project root as its instructions.
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+**Step 1**: Create a new project folder. Open Terminal and run:
 
-***
+```bash
+mkdir my-discovery-project
+cd my-discovery-project
+```
 
-# Editing this README
+> You can replace `my-discovery-project` with any name you prefer (e.g., `bestbuy-discovery`, `my-ai-product`, etc.)
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+**Step 2**: Copy the workflow files into your project. Replace `~/Desktop/sample-aws-ai-plc` with the actual path where you downloaded the repository:
 
-## Suggestions for a good README
+**macOS/Linux:**
+```bash
+cp ~/Desktop/sample-aws-ai-plc/aiplc-rules/aws-aiplc-rules/core-workflow.md ./CLAUDE.md
+cp -R ~/Desktop/sample-aws-ai-plc/aiplc-rules/aws-aiplc-rule-details ./aws-aiplc-rule-details
+```
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+**Windows (PowerShell):**
+```powershell
+Copy-Item "$env:USERPROFILE\Desktop\sample-aws-ai-plc\aiplc-rules\aws-aiplc-rules\core-workflow.md" ".\CLAUDE.md"
+Copy-Item -Recurse "$env:USERPROFILE\Desktop\sample-aws-ai-plc\aiplc-rules\aws-aiplc-rule-details" ".\aws-aiplc-rule-details"
+```
 
-## Name
-Choose a self-explaining name for your project.
+**Windows (CMD):**
+```cmd
+copy "%USERPROFILE%\Desktop\sample-aws-ai-plc\aiplc-rules\aws-aiplc-rules\core-workflow.md" ".\CLAUDE.md"
+xcopy "%USERPROFILE%\Desktop\sample-aws-ai-plc\aiplc-rules\aws-aiplc-rule-details" ".\aws-aiplc-rule-details\" /E /I
+```
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+> **Note**: If you downloaded the repository to a different location (not Desktop), adjust the path accordingly.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+**Your project should look like:**
+```
+my-discovery-project/
+├── CLAUDE.md                         ← Workflow instructions
+├── aws-aiplc-rule-details/           ← Supporting rules
+│   ├── common/
+│   ├── discovery/
+│   └── inception/
+└── aiplc-docs/                       ← (created automatically during workflow)
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+**Step 3**: Start Claude Code in your project folder:
+```bash
+claude
+```
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+**Verify it works**: Ask Claude "What instructions are currently active?" — it should describe the AI-PLC Discovery workflow.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+---
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+### Kiro
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+Kiro uses steering files in a `.kiro/` directory within your project workspace.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+**Step 1**: Create a new project folder. Open Terminal and run:
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+```bash
+mkdir my-discovery-project
+cd my-discovery-project
+```
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+> You can replace `my-discovery-project` with any name you prefer (e.g., `bestbuy-discovery`, `my-ai-product`, etc.)
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+**Step 2**: Create the required directories and copy files. Replace `~/Desktop/sample-aws-ai-plc` with the actual path where you downloaded the repository:
+
+**macOS/Linux:**
+```bash
+mkdir -p .kiro/steering
+cp -R ~/Desktop/sample-aws-ai-plc/aiplc-rules/aws-aiplc-rules .kiro/steering/
+cp -R ~/Desktop/sample-aws-ai-plc/aiplc-rules/aws-aiplc-rule-details .kiro/
+```
+
+**Windows (PowerShell):**
+```powershell
+New-Item -ItemType Directory -Force -Path ".kiro\steering"
+Copy-Item -Recurse "$env:USERPROFILE\Desktop\sample-aws-ai-plc\aiplc-rules\aws-aiplc-rules" ".kiro\steering\"
+Copy-Item -Recurse "$env:USERPROFILE\Desktop\sample-aws-ai-plc\aiplc-rules\aws-aiplc-rule-details" ".kiro\"
+```
+
+**Windows (CMD):**
+```cmd
+mkdir .kiro\steering
+xcopy "%USERPROFILE%\Desktop\sample-aws-ai-plc\aiplc-rules\aws-aiplc-rules" ".kiro\steering\aws-aiplc-rules\" /E /I
+xcopy "%USERPROFILE%\Desktop\sample-aws-ai-plc\aiplc-rules\aws-aiplc-rule-details" ".kiro\aws-aiplc-rule-details\" /E /I
+```
+
+> **Note**: If you downloaded the repository to a different location (not Desktop), adjust the path accordingly.
+
+**Your project should look like:**
+```
+my-discovery-project/
+├── .kiro/
+│   ├── steering/
+│   │   └── aws-aiplc-rules/
+│   │       └── core-workflow.md      ← Workflow instructions
+│   └── aws-aiplc-rule-details/       ← Supporting rules
+│       ├── common/
+│       ├── discovery/
+│       └── inception/
+└── aiplc-docs/                       ← (created automatically during workflow)
+```
+
+**Step 3**: Open Kiro IDE:
+```bash
+kiro .
+```
+Or open Kiro IDE and use File → Open Workspace to select your project folder.
+
+**Step 4**: Enable **Vibe Mode** — this lets the AI guide you through the workflow.
+
+> **Note**: Kiro may sometimes nudge you to switch to Spec mode. Select **No** to stay in Vibe mode for the AI-PLC workflow.
+
+**Verify it works**: Open the steering files panel and confirm you see `core-workflow` listed under Workspace.
+
+---
+
+## Start the Workflow
+
+Once setup is complete, start a conversation with your AI tool using one of these prompts based on your starting point:
+
+### Starting from Customer Pain Points (Entry Point 1)
+
+Use this when you have customer feedback, reviews, or a problem area to explore:
+
+> "I want to start AI-PLC Discovery from customer pain points"
+
+or
+
+> "Help me create a PR/FAQ from customer feedback"
+
+The AI will gather pain points (you can provide a URL, describe them in your own words, or answer structured questions), then guide you through PR/FAQ creation, solution analysis, and prototype specification.
+
+### Starting from Use Cases (Entry Point 2)
+
+Use this when you have multiple use case ideas to evaluate:
+
+> "I have use cases that need prioritization using AI-PLC"
+
+or
+
+> "Start AI-PLC Discovery workflow for use case prioritization"
+
+The AI will help you document all use cases, score and rank them, select the top 3, and generate PROTOTYPE-*.md files.
+
+### Building from Existing Prototype Specs (Entry Point 3)
+
+Use this when you already have PROTOTYPE-*.md files in your workspace:
+
+> "Start the AI-PLC workflow to build my prototypes"
+
+or
+
+> "I have PROTOTYPE-*.md files ready, let's build them"
+
+The AI will read the specifications and build prototypes directly.
+
+---
+
+### How the AI Interacts with You
+
+The AI will:
+1. Detect your workspace and determine the right entry point
+2. Ask you questions in `.md` files (you fill in `[Answer]:` tags)
+3. Guide you through each stage with approval gates
+4. Produce the Discovery Document and prototype specifications
+
+> **Tip**: If the AI starts asking questions directly in chat instead of creating files, say: "Please create a question file (.md) with [Answer]: tags instead of asking in chat."
+
+---
+
+## What Happens After Discovery?
+
+### The Discovery Document
+
+The main output is `aiplc-docs/discovery/discovery-document.md` — a single comprehensive file containing everything needed for product development:
+
+```
+Discovery Document Sections:
+├── Pain Point Analysis          — Customer problems, severity, market sizing
+├── PR/FAQ                       — Working Backwards press release and FAQs
+├── Solution Analysis            — Identified solutions from the PR/FAQ
+├── Use Case Prioritization      — Scored and ranked use cases
+├── Prototype Specifications     — PROTOTYPE-*.md files for selected solutions
+├── Product Strategy             — Positioning, differentiation, business model
+└── Go-to-Market Plan            — Marketing, sales approach, launch planning
+```
+
+### Using the Discovery Document for Software Development
+
+The Discovery Document is a `.md` file designed to be dropped into the context of AI-powered software development tools. You can:
+
+- **Add it to AI-DLC** (AI-Driven Development Life Cycle) as input for the Inception phase — developers use it for requirements analysis, workflow planning, and application design
+- **Add it to any AI coding tool** (Claude Code, Kiro, Cursor, GitHub Copilot, etc.) as project context for building the product
+- **Share it with development teams** as a traditional product brief — it's readable markdown that works with or without AI tools
+
+The document provides developers with:
+1. **Inception**: Clear requirements, validated use cases, and strategic context
+2. **Construction**: Prototype specifications, technical constraints, and success criteria
+3. **Operations**: Business metrics, launch plan, and monitoring needs
+
+### Supporting Artifacts
+
+In addition to the main Discovery Document, the workflow generates:
+- `aiplc-docs/discovery/prototypes/*/PROTOTYPE-*.md` — Portable prototype specifications
+- `aiplc-docs/discovery/envision/pain-point-analysis.md` — Detailed pain point breakdown
+- `aiplc-docs/discovery/prioritization/scoring.md` — Use case scoring rationale
+- `aiplc-docs/audit.md` — Complete audit trail of all decisions and inputs
+
+---
+
+---
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+[Add your license here]
