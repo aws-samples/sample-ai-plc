@@ -380,11 +380,6 @@ The Discovery Document is a `.md` file designed to be dropped into the context o
 - **Add it to any AI coding tool** (Claude Code, Kiro, Cursor, GitHub Copilot, etc.) as project context for building the product
 - **Share it with development teams** as a traditional product brief — it's readable markdown that works with or without AI tools
 
-The document provides developers with:
-1. **Inception**: Clear requirements, validated use cases, and strategic context
-2. **Construction**: Prototype specifications, technical constraints, and success criteria
-3. **Operations**: Business metrics, launch plan, and monitoring needs
-
 ### Supporting Artifacts
 
 In addition to the main Discovery Document, the workflow generates:
