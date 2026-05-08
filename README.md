@@ -1,7 +1,5 @@
 # AI-PLC — Product Discovery, Strategy and Prototyping
 
-> [!IMPORTANT]
-> Generative AI can make mistakes. Review all output and validate product decisions before acting on them.
 
 AI-PLC is a guided workflow that helps Product Managers, business leaders, and other non-technical roles define product strategy and determine what applications should be built for their business. It takes you from customer insights to validated prototypes — all within a single AI-assisted session. It covers pain point analysis, use case prioritization, PR/FAQ creation (Working Backwards), product strategy, and prototype generation.
 
@@ -152,7 +150,7 @@ cd ~/Desktop
 **Step 3**: Download the repository:
 
 ```bash
-git clone https://github.com/YOUR-ORG/sample-aws-ai-plc.git
+git clone https://github.com/YOUR-ORG/sample-aws-ai-plc.git sample-ai-plc
 ```
 
 This creates a folder called `sample-aws-ai-plc` containing all the workflow files.
