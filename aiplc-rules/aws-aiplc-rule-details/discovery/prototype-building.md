@@ -259,15 +259,46 @@ Proceed with building the prototype?
 
 If [A] - Yes:
 
+#### Environment Detection for Agentic Use Cases
+
+Before building, detect the environment and configure Strands accordingly:
+
+**Detection Logic:**
+1. Check if `.kiro/` directory exists → **Kiro environment**
+2. Otherwise → **All other environments** (Claude Code, Copilot, Cursor, Cline, etc.)
+
+**Path 1 — Kiro:**
+- Activate Strands Power (built-in Kiro Power integration)
+- No additional setup needed
+- Proceed with building
+
+**Path 2 — All other environments:**
+- Present the following question:
+
+```
+## Question
+We need the Strands SDK to build your AI agent. How brave are you feeling today?
+
+A) Mock it — fake the agent responses so I can see the UI and flow without installing anything. I'll let the developers handle the real wiring later. (No SDKs, no drama, just vibes.)
+B) Let's ride — I trust you, AI. Install whatever you need and let's build this thing for real. Hold my coffee. ☕
+
+[Answer]:
+```
+
+- If [A] Mock: Build frontend with hardcoded mock responses simulating the agent. Skip Strands installation entirely. Mark prototype as "UI Prototype — Agent Mocked" in iteration log.
+- If [B] Ride: Run `uvx strands-agents-builder` to scaffold the agent (if `uvx` available), otherwise fall back to `pip install strands-agents strands-agents-tools`. Proceed with full build.
+
+---
+
 Show progress:
 ```
 Building {Use Case Name} prototype...
 
-Step 1/{total}: Activating Strands Power... (if agentic)
+Step 1/{total}: Setting up Strands agent... (if agentic)
 ```
 
 **For Agentic Use Cases:**
-1. Activate Strands Power (use Kiro Power integration)
+1. Set up Strands agent (via Power, MCP, install, or mock — based on environment)
 2. Configure LLM provider and model
 3. Implement specified tools
 4. Create agent orchestration logic
