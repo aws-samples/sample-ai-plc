@@ -1,6 +1,6 @@
 # AI-PLC — Product Discovery, Strategy and Prototyping
 
-Note: Content should not be deployed to production without additional security testing.
+Note: The example provided in this repository is for experimental and educational purposes only. It demonstrates concepts and techniques but is not intended for direct use in production environments.
 
 AI-PLC is a guided workflow that helps Product Managers, business leaders, and other non-technical roles define product strategy and determine what applications should be built for their business. It takes you from customer insights to validated prototypes — all within a single AI-assisted session. It covers pain point analysis, use case prioritization, PR/FAQ creation (Working Backwards), product strategy, and prototype generation.
 

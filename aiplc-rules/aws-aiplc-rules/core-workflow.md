@@ -306,6 +306,13 @@ This Discovery Document will be provided to developers in a separate workspace f
 - Log every interaction with timestamp
 - Use ISO 8601 format (YYYY-MM-DDTHH:MM:SSZ)
 
+**NEVER log the following in audit.md:**
+- API keys, tokens, or secrets of any kind
+- AWS credentials (access keys, secret keys, bearer tokens)
+- Any value that appears to be a credential (strings starting with `AKIA`, `sk-`, `bedrock-api-key-`, `goog_`, etc.)
+- If a user accidentally pastes a credential in chat or an answer file, redact it before logging — replace with `[CREDENTIAL REDACTED]`
+- Log only "credentials configured: yes/no" — never the actual values
+
 ## Directory Structure
 
 ```

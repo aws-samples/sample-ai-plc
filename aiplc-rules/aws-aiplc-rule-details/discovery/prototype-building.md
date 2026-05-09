@@ -123,92 +123,118 @@ Record selection.
 
 ### Step 2.5: API Key Check and Request
 
+**CREDENTIAL SECURITY RULE**:
+- Only check whether credentials **exist** (non-empty) — never read, display, or echo their actual values
+- Never log credential values in `audit.md` or any other file — log only "credentials configured: yes/no"
+- If a user pastes a credential in chat, do NOT repeat it back — acknowledge receipt without displaying the value
+- Never include credential values in AI-generated code, comments, or output files
+
 Based on selected LLM provider, check for API credentials and ask upfront if missing:
 
 **For Bedrock:**
-- Check environment variables: AWS_BEARER_TOKEN_BEDROCK, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION
-- Check AWS CLI configuration: ~/.aws/credentials
+- Check environment variables exist (non-empty): AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION
+- Check AWS CLI configuration exists: ~/.aws/credentials
 
-If credentials NOT found:
+**For Anthropic:**
+- Check environment variable exists (non-empty): ANTHROPIC_API_KEY
+
+**For OpenAI:**
+- Check environment variable exists (non-empty): OPENAI_API_KEY
+
+**For Gemini:**
+- Check environment variable exists (non-empty): GOOGLE_API_KEY
+
+If credentials NOT found, present the following guidance:
+
 ```
-⚠️  AWS Bedrock credentials not found
+## Setting Up Your API Credentials
 
-To use AWS Bedrock, you need either:
+Your API credentials must be set as **environment variables** in your terminal. This keeps them secure and out of any logged files.
 
-Option 1 (Development - Recommended):
-  export AWS_BEARER_TOKEN_BEDROCK=your_bearer_token
+⚠️  **IMPORTANT: Do NOT paste your credentials into this chat or any [Answer]: field.**
+Set them in the terminal only. I will verify they are configured without seeing the actual values.
 
-Option 2 (Production):
-  export AWS_ACCESS_KEY_ID=your_access_key
-  export AWS_SECRET_ACCESS_KEY=your_secret_key
-  export AWS_REGION=us-west-2
+**What is an environment variable?** It's a setting in your computer's terminal that programs can read. You set it once per session, and any tool running in that terminal can use it.
 
-Please provide your credentials:
-[A] I have AWS credentials configured (will check again)
-[B] I'll provide AWS_BEARER_TOKEN_BEDROCK now
-[C] I'll provide AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY now
+### How to Set Environment Variables
+
+**Step 1:** Open a terminal window:
+- **VS Code / Cursor / Codex:** Use the built-in terminal (View → Terminal, or Ctrl+`)
+- **Kiro:** Use the built-in terminal panel (Terminal → New Terminal)
+- **Claude Code:** You're already in a terminal
+- **Any other tool:** Open your operating system's terminal application (macOS: Terminal or iTerm; Windows: PowerShell)
+
+**Step 2:** Copy and paste the commands below into your terminal, replacing the placeholder values with your actual credentials:
+```
+
+Then show the appropriate commands based on provider:
+
+**For Bedrock:**
+```
+**macOS / Linux:**
+  export AWS_DEFAULT_REGION=us-west-2
+  export AWS_ACCESS_KEY_ID=paste-your-key-here
+  export AWS_SECRET_ACCESS_KEY=paste-your-secret-here
+
+**Windows (PowerShell):**
+  $env:AWS_DEFAULT_REGION="us-west-2"
+  $env:AWS_ACCESS_KEY_ID="paste-your-key-here"
+  $env:AWS_SECRET_ACCESS_KEY="paste-your-secret-here"
+
+Where to get these: AWS Console → IAM → Security Credentials → Access Keys
+```
+
+**For Anthropic:**
+```
+**macOS / Linux:**
+  export ANTHROPIC_API_KEY=paste-your-key-here
+
+**Windows (PowerShell):**
+  $env:ANTHROPIC_API_KEY="paste-your-key-here"
+
+Where to get this: https://console.anthropic.com/ → API Keys
+```
+
+**For OpenAI:**
+```
+**macOS / Linux:**
+  export OPENAI_API_KEY=paste-your-key-here
+
+**Windows (PowerShell):**
+  $env:OPENAI_API_KEY="paste-your-key-here"
+
+Where to get this: https://platform.openai.com/api-keys
+```
+
+**For Gemini:**
+```
+**macOS / Linux:**
+  export GOOGLE_API_KEY=paste-your-key-here
+
+**Windows (PowerShell):**
+  $env:GOOGLE_API_KEY="paste-your-key-here"
+
+Where to get this: https://aistudio.google.com/apikey
+```
+
+Then present confirmation question:
+
+```
+**Step 3:** Keep this terminal open — your AI tool must run in the same terminal session where you set the variables.
+
+Once you've set your credentials in the terminal, confirm below:
+
+[A] Done — I've set my credentials in the terminal
+[B] I need help — show me the steps again
+[C] I'm using AWS CLI profiles (already configured via `aws configure`)
 [D] Use a different LLM provider
 
 [Answer]:
 ```
 
-If [B], ask:
-```
-Please provide your AWS_BEARER_TOKEN_BEDROCK:
-(Format: export AWS_BEARER_TOKEN_BEDROCK=bedrock-api-key-...)
+**CRITICAL**: Do NOT offer options to paste credentials into [Answer]: fields. Credentials must only be set via the terminal. If a user accidentally pastes a credential in chat or an answer field, respond with: "I see you've shared a credential — please revoke it and generate a new one. Always set credentials in your terminal, never in chat." Do NOT log the credential.
 
-[Answer]:
-```
-
-If [C], ask:
-```
-Please provide your AWS credentials:
-
-AWS_ACCESS_KEY_ID: [Answer]:
-AWS_SECRET_ACCESS_KEY: [Answer]:
-AWS_REGION (default us-west-2): [Answer]:
-```
-
-**For Anthropic:**
-- Check environment variable: ANTHROPIC_API_KEY
-
-If NOT found:
-```
-⚠️  Anthropic API key not found
-
-Please provide your ANTHROPIC_API_KEY:
-(Get it from: https://console.anthropic.com/)
-
-[Answer]:
-```
-
-**For OpenAI:**
-- Check environment variable: OPENAI_API_KEY
-
-If NOT found:
-```
-⚠️  OpenAI API key not found
-
-Please provide your OPENAI_API_KEY:
-(Get it from: https://platform.openai.com/api-keys)
-
-[Answer]:
-```
-
-**For Gemini:**
-- Check environment variable: GOOGLE_API_KEY
-
-If NOT found:
-```
-⚠️  Google API key not found
-
-Please provide your GOOGLE_API_KEY:
-(Get it from: https://aistudio.google.com/apikey)
-
-[Answer]:
-```
-
-After receiving credentials, verify they work before proceeding:
+After user confirms [A] or [C], verify credentials work by making a minimal API call:
 ```
 ✅ {Provider} credentials verified and working
 ```
@@ -217,10 +243,10 @@ If verification fails:
 ```
 ❌ {Provider} credentials verification failed
 
-Error: {error message}
+This usually means the credentials weren't set in the same terminal session, or the values are incorrect.
 
 Options:
-[A] Try different credentials
+[A] I'll try setting them again in my terminal (show me the steps)
 [B] Use a different LLM provider
 
 [Answer]:
@@ -272,6 +298,13 @@ Before building, detect the environment and configure Strands accordingly:
 - No additional setup needed
 - Proceed with building
 
+**PROTOTYPE ENVIRONMENT RULES** (applies to Path 2 only — Kiro Power handles isolation internally):
+- Always create a virtual environment (`python -m venv .venv`) before installing any packages — never install to the system Python
+- Pin package versions when installing (e.g., `pip install strands-agents==0.1.x flask==3.x.x`) — use latest stable versions available
+- Only install packages from PyPI (the official Python package index) — never install from arbitrary URLs or git repos
+- Prototypes run locally only (localhost) — do not expose ports to the network or deploy to remote servers
+- Do not install packages or run code that requires root/sudo permissions
+
 **Path 2 — All other environments:**
 - Present the following question:
 
@@ -286,7 +319,7 @@ B) Let's ride — I trust you, AI. Install whatever you need and let's build thi
 ```
 
 - If [A] Mock: Build frontend with hardcoded mock responses simulating the agent. Skip Strands installation entirely. Mark prototype as "UI Prototype — Agent Mocked" in iteration log.
-- If [B] Ride: Run `uvx strands-agents-builder` to scaffold the agent (if `uvx` available), otherwise fall back to `pip install strands-agents strands-agents-tools`. Proceed with full build.
+- If [B] Ride: Create a virtual environment first (`python -m venv .venv && source .venv/bin/activate`), then install with pinned versions: `pip install strands-agents strands-agents-tools flask flask-cors`. Do NOT install to system Python. Proceed with full build.
 
 ---
 
@@ -323,6 +356,8 @@ Step 5/{total}: Applying {brand} styling...
 Step 6/{total}: Deploying to http://localhost:{port}...
 Step 7/{total}: Running basic tests...
 ```
+
+**SECURITY NOTE**: Prototypes are for local demonstration only. They run on localhost and must not be exposed to external networks or deployed to production/public-facing environments from this workshop.
 
 ### Step 2.8: Present Completion
 
