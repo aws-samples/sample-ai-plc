@@ -252,7 +252,7 @@ The AI agent reads `build-instructions.md` and generates the application code in
 
 **If deployment is available** (AWS credentials configured, Amplify/CDK available): deploy and provide URL.
 
-**If deployment is not available**: provide local run instructions and suggest a tunneling option for sharing with external users (e.g., ngrok, localtunnel, or similar).
+**If deployment is not available**: provide local run instructions only. Prototypes run on localhost and must NOT be exposed to external networks via tunneling (ngrok, localtunnel, etc.) — they have access to the user's API credentials via environment variables and have no authentication layer.
 
 Present completion:
 
@@ -260,7 +260,7 @@ Present completion:
 # Prototype Built
 
 [If deployed]: Your prototype is live at: [URL]
-[If local]: Run with: `[command]`. To share externally: `[tunnel command]`
+[If local]: Run with: `[command]` — accessible at http://localhost:[port]
 
 **Design**: [Clean modern / Organization brand / Matching [product] / Minimal]
 **Device**: [Desktop / Mobile / Responsive]
