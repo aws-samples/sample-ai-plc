@@ -128,6 +128,8 @@ Example:
 - Slug: "customer-support-agent"
 - File: `aiplc-docs/discovery/prototypes/customer-support-agent/PROTOTYPE-customer-support-agent.md`
 
+**SLUG SANITIZATION**: Strip all characters except lowercase letters, numbers, and hyphens from slugs. Reject any slug containing path separators (`/`, `\`, `..`).
+
 ## Step 4: Present Completion for Each Use Case
 
 After generating each PROTOTYPE-*.md file:

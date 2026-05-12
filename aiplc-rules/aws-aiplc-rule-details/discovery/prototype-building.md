@@ -319,7 +319,7 @@ B) Let's ride — I trust you, AI. Install whatever you need and let's build thi
 ```
 
 - If [A] Mock: Build frontend with hardcoded mock responses simulating the agent. Skip Strands installation entirely. Mark prototype as "UI Prototype — Agent Mocked" in iteration log.
-- If [B] Ride: Create a virtual environment first (`python -m venv .venv && source .venv/bin/activate`), then install with pinned versions: `pip install strands-agents strands-agents-tools flask flask-cors`. Do NOT install to system Python. Proceed with full build.
+- If [B] Ride: Create a virtual environment first (`python -m venv .venv && source .venv/bin/activate`), then install with pinned versions: `pip install strands-agents==1.39.0 strands-agents-tools==0.5.2 flask==3.1.3 flask-cors==6.0.2`. Do NOT install to system Python. Proceed with full build.
 
 ---
 
@@ -358,6 +358,8 @@ Step 7/{total}: Running basic tests...
 ```
 
 **SECURITY NOTE**: Prototypes are for local demonstration only. They run on localhost and must not be exposed to external networks or deployed to production/public-facing environments from this workshop.
+
+**CREDENTIAL ISOLATION**: When launching the prototype subprocess, export only the selected provider's API credentials to the process environment. Do not pass the full shell environment. For example, if using Bedrock, only pass `AWS_DEFAULT_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_SESSION_TOKEN` (if set). This prevents a buggy prototype from accessing unrelated credentials.
 
 ### Step 2.8: Present Completion
 
