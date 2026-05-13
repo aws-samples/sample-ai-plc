@@ -7,3 +7,4 @@ venv/
 __pycache__/
 credentials.json
 secrets.*
+.DS_Store
