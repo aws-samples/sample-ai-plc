@@ -202,7 +202,7 @@ Files tracking workflow progress and status.
 
 ## Common Abbreviations
 
-- **AI-PLC**: AI-Driven Development Life Cycle
+- **AI-PLC**: AI-Driven Product Life Cycle
 - **NFR**: Non-Functional Requirements
 - **UOW**: Unit of Work
 - **API**: Application Programming Interface

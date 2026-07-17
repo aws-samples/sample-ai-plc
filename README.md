@@ -7,7 +7,7 @@ Note: The example provided in this repository is for experimental and educationa
 
 AI-PLC is a AI-guided workflow that helps Product Managers, business leaders, and other non-technical roles define product strategy and determine what applications should be built for their business. Workflow experience is natural language conversation with agentic AI tools. It takes you from customer insights to validated prototypes — all within a single AI-assisted session. It covers pain point analysis, use case prioritization, PR/FAQ creation (Working Backwards), product strategy, go to market strategy and prototype generation.
 
-The workflow is flexible — you can start from wherever you are. Whether you're exploring customer pain points for the first time, already have a list of use cases to evaluate and priortize, or want to jump straight into building prototypes from existing specifications. You can complete the entire journey in one session, or generate portable PROTOTYPE-*.md files and share them with other teams to build prototypes in their own workspace.
+The workflow is flexible — you can start from wherever you are. Whether you're exploring customer pain points for the first time, already have a list of use cases to evaluate and prioritize, or want to jump straight into building prototypes from existing specifications. You can complete the entire journey in one session, or generate portable PROTOTYPE-*.md files and share them with other teams to build prototypes in their own workspace.
 
 The workflows are also fully customizable to your needs — they are defined in markdown files that you can edit to adjust questions, scoring frameworks, output formats, or add domain-specific guidance for your organization.
 
@@ -46,7 +46,7 @@ AI-PLC supports three entry points — from broad exploration to focused executi
 
 ### Entry Point 3: Build from Existing Prototype Specs
 
-**You have**: Prototype specification md files that wer already generated from entry point 1 or entry point 2. This separate entry point allows you to run one session collectively to agree on what prototype should be built and create specifications accordingly and then , either use same session or hand over the specifications to other team who can start with these specifications in this third entry point to create prototype. 
+**You have**: Prototype specification md files that were already generated from entry point 1 or entry point 2. This separate entry point allows you to run one session collectively to agree on what prototype should be built and create specifications accordingly, and then either use the same session or hand over the specifications to another team who can start with these specifications in this third entry point to create prototypes. 
 
 **What happens**: Skips all discovery and goes straight to building prototypes from the specifications.
 
