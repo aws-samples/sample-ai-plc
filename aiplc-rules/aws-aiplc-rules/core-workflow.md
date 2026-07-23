@@ -55,11 +55,12 @@ Rule details location: `./aws-aiplc-rule-details/`
 
 ## Overview
 
-The Discovery Phase has **THREE ENTRY POINTS**:
+The Discovery Phase has **FOUR ENTRY POINTS**:
 
 1. **Entry Point 1 (Highest Priority)**: Existing PROTOTYPE-*.md files → Build prototypes directly
 2. **Entry Point 2 (Path A)**: Start from pain points → PR/FAQ → Solution Analysis
 3. **Entry Point 3 (Path B)**: Start from use cases → Prioritization → Prototype Context Generation
+4. **Entry Point 4 (Vision only)**: Existing `discovery-document.md` → Generate AI-DLC Vision Document directly (no re-running Discovery)
 
 ---
 
@@ -68,12 +69,14 @@ The Discovery Phase has **THREE ENTRY POINTS**:
 1. **MANDATORY**: Log initial user request in audit.md with complete raw input
 2. Load all steps from `inception/workspace-detection.md`
 3. Execute workspace detection:
+   - **INTENT CHECK**: If the user explicitly asks to generate a Vision Document from an existing Discovery Document (e.g., "generate a vision document from my discovery", "create the AI-DLC vision doc") AND `aiplc-docs/discovery/discovery-document.md` exists → Entry Point 4 (Vision only)
    - **PRIORITY CHECK**: Check for existing PROTOTYPE-*.md files (Entry Point 1)
      - Path: `aiplc-docs/discovery/prototypes/*/PROTOTYPE-*.md`
      - If found: Skip all discovery, jump to Prototype Building
    - Check for existing aiplc-state.md (resume if found)
    - Check for existing Discovery artifacts
 4. Determine next phase:
+   - If Entry Point 4 conditions met: Vision Document Generation (standalone)
    - If PROTOTYPE-*.md found: Prototype Building (Entry Point 1)
    - If no PROTOTYPE-*.md: Discovery Mode Selection (Entry Point 2 or 3)
 5. **MANDATORY**: Log findings in audit.md
@@ -93,6 +96,20 @@ The Discovery Phase has **THREE ENTRY POINTS**:
 2. **SKIP ALL DISCOVERY PHASES**
 3. **JUMP TO**: Prototype Building (see below)
 4. After prototypes built, continue to Product Strategy → GTM
+
+---
+
+## ENTRY POINT 4: Vision Document from Existing Discovery
+
+**Execute IF**: User explicitly requests a Vision Document AND `aiplc-docs/discovery/discovery-document.md` already exists.
+
+**Purpose**: Generate the AI-DLC Vision Document from a Discovery Document that was completed earlier (this session or a prior one) — without re-running any Discovery stages. Useful when Discovery was finished before this capability existed, or a team wants only the build-ready handoff artifact.
+
+**Flow**:
+1. Announce the existing Discovery Document was found
+2. **SKIP ALL DISCOVERY STAGES** (pain points, use cases, strategy, GTM)
+3. **JUMP TO**: Vision Document Generation (load `discovery/vision-document-generation.md`)
+4. Present `vision-document.md` for review; Discovery output is then complete
 
 ---
 
@@ -267,11 +284,30 @@ Load `discovery/go-to-market.md`
 
 ---
 
+## Vision Document Generation (ALWAYS — Final Output)
+
+Load `discovery/vision-document-generation.md`
+
+**Execute IF**: Go-to-Market is complete and approved (runs automatically on every path — Entry Point 1, Path A, and Path B all converge here).
+
+**Purpose**: Transform the completed Discovery Document into an **AI-DLC Vision Document** (`vision-document.md`) — the native input format for the AI-DLC workflow (`awslabs/aidlc-workflows`) Inception Phase. This produces a build-ready handoff artifact regardless of which entry point the PM used.
+
+**Execution**:
+1. Load all Discovery artifacts
+2. Map Discovery content → AI-DLC Vision Document sections
+3. Auto-infer Risks and Open Questions from context (no new PM questions), flagged for review
+4. Write `aiplc-docs/discovery/vision-document.md`
+5. Present for PM review (⛔ GATE)
+
+---
+
 ## Discovery Complete
 
-**Output**: `aiplc-docs/discovery/discovery-document.md`
+**Outputs**:
+- `aiplc-docs/discovery/discovery-document.md` — Full Discovery record (Working Backwards)
+- `aiplc-docs/discovery/vision-document.md` — AI-DLC Inception input (Vision format)
 
-This comprehensive document contains:
+The Discovery Document contains:
 - Pain points and PR/FAQ (if Path A)
 - Use cases and prioritization (if Path B)
 - Prototype specifications (PROTOTYPE-*.md files)
@@ -279,10 +315,12 @@ This comprehensive document contains:
 - Go-to-Market plan
 
 **Next Steps for Developers**:
-This Discovery Document will be provided to developers in a separate workspace for:
-- Inception Phase (Requirements Analysis, Workflow Planning, etc.)
+Hand off `vision-document.md` to a build team in a separate AI-DLC workspace for:
+- Inception Phase (Requirements Analysis, Workflow Planning, etc.) — consumes the Vision Document directly
 - Construction Phase (Code Generation, Build & Test)
 - Operations Phase (Deployment, Monitoring)
+
+The full `discovery-document.md` remains available as supporting context.
 
 ---
 
