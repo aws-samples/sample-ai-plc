@@ -12,4 +12,7 @@ jobs:
       contents: write # Allows the tool to save the data
     steps:
       - name: Sync Traffic
-        uses: Mireco/repository-traffic-charts@v1.4.0
+        uses: sangonzal/repository-traffic-action@v0.1.5
+        env:
+          # Automatically uses your built-in GitHub secret
+          TRAFFIC_ACTION_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
