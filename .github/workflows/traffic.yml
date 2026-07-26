@@ -1,0 +1,15 @@
+name: Repository Traffic
+
+on:
+  schedule:
+    - cron: '0 0 1,15 * *' # Runs on the 1st and 15th of the month
+  workflow_dispatch: # Lets you run it manually whenever you want
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Allows the tool to save the data
+    steps:
+      - name: Sync Traffic
+        uses: Mireco/repository-traffic-charts@v1.4.0
