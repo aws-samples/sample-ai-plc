@@ -2,49 +2,42 @@ name: Repository Traffic
 
 on:
   schedule:
-    # Runs automatically on the 12th and 28th of the month at midnight UTC
     - cron: '0 0 12,28 * *'
-  workflow_dispatch: # Allows manual runs anytime
+  workflow_dispatch:
 
 jobs:
   log-traffic:
     runs-on: ubuntu-latest
     steps:
-      # Natively authenticates using your working Personal Access Token
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.TRAFFIC_TOKEN }}
 
-      - name: Fetch Data and Append to History Branch
-        env:
-          TRAFFIC_TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
+      # Fetch the traffic branch right away so it exists locally in workspace context
+      - name: Prepare Traffic Branch
         run: |
-          # 1. Configure Git identity
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@://github.com"
+          git fetch origin traffic
+          git checkout traffic
 
-          # 2. Fetch the live clone metrics from GitHub API
-          RESPONSE=$(curl -s -H "Authorization: Bearer $TRAFFIC_TOKEN" \
+      - name: Fetch Live Data and Log
+        run: |
+          # 1. Hard-inject token securely from secrets store into curl request
+          RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.TRAFFIC_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
-            "https://github.com")
+            "https://github.com{{ github.repository }}/traffic/clones")
 
-          # 3. Parse statistics out of the response
+          # 2. Extract stats using Python
           COUNT=$(echo "$RESPONSE" | python3 -c "import sys, json; print(json.load(sys.stdin).get('count', 0))")
           UNIQUES=$(echo "$RESPONSE" | python3 -c "import sys, json; print(json.load(sys.stdin).get('uniques', 0))")
           DATE=$(date -u +"%Y-%m-%d")
 
-          # 4. Format the row entry
-          NEW_ENTRY="Date: $DATE | Total Clones: $COUNT | Unique Cloners: $UNIQUES"
+          # 3. Append data row directly to the history file
+          echo "Date: $DATE | Total Clones: $COUNT | Unique Cloners: $UNIQUES" >> clone-stats.txt
 
-          # 5. Switch to the traffic branch, pull down existing history, and append new line
-          git fetch origin traffic
-          git checkout traffic
-          
-          # Append data row to the file
-          echo "$NEW_ENTRY" >> clone-stats.txt
-
-          # 6. Commit the appended data line back to the traffic branch
+          # 4. Commit and push back up to the traffic branch
           git add clone-stats.txt
           git commit -m "chore: log traffic metrics for $DATE"
           git push origin traffic
