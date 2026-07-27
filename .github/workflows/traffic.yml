@@ -9,28 +9,26 @@ jobs:
   create-traffic-branch:
     runs-on: ubuntu-latest
     steps:
+      # Automatically authenticates the repository workspace using your personal token
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.TRAFFIC_TOKEN }}
 
       - name: Force Create and Push Traffic Branch
-        env:
-          TRAFFIC_TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
         run: |
           # 1. Configure git identity
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # 2. Use the definitive built-in variable to rewrite the remote URL securely
-          git remote set-url origin "https://x-access-token:$TRAFFIC_TOKEN@://github.com"
-          
-          # 3. Create a fresh, empty isolated branch named traffic
+          # 2. Create a fresh, empty isolated branch named traffic
           git checkout --orphan traffic
           git rm -rf . --quiet
           
-          # 4. Create a placeholder tracking log file
+          # 3. Create a placeholder tracking log file
           echo "Traffic history branch initialization: $(date)" > clone-stats.txt
           
-          # 5. Stage, commit, and forcefully push the new branch to GitHub
+          # 4. Stage, commit, and forcefully push the new branch to GitHub
           git add clone-stats.txt
           git commit -m "chore: initialize isolated traffic monitoring branch"
           git push origin traffic --force
