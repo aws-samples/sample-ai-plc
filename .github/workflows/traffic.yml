@@ -18,21 +18,33 @@ jobs:
           TRAFFIC_TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
           REPO: ${{ github.repository }}
         run: |
-          # 1. Fetch clone data from GitHub API
-          RESPONSE=$(curl -s -H "Authorization: token $TRAFFIC_TOKEN" \
+          # 1. Fetch clone data using the modern Authorization Header format
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -H "Authorization: Bearer $TRAFFIC_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             "https://github.com")
+
+          # Separate the HTML status code from the actual response body
+          HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          # 2. Check if the API call actually worked (Status 200)
+          if [ "$HTTP_STATUS" -ne 200 ]; then
+            echo "Error: GitHub API returned status code $HTTP_STATUS"
+            echo "Response was: $BODY"
+            exit 1
+          fi
           
-          # 2. Extract statistics
-          COUNT=$(echo "$RESPONSE" | python3 -c "import sys, json; print(json.load(sys.stdin).get('count', 0))")
-          UNIQUES=$(echo "$RESPONSE" | python3 -c "import sys, json; print(json.load(sys.stdin).get('uniques', 0))")
+          # 3. Safely extract statistics using Python now that we know it's valid JSON
+          COUNT=$(echo "$BODY" | python3 -c "import sys, json; print(json.load(sys.stdin).get('count', 0))")
+          UNIQUES=$(echo "$BODY" | python3 -c "import sys, json; print(json.load(sys.stdin).get('uniques', 0))")
           DATE=$(date -u +"%Y-%m-%d")
 
-          # 3. Create data log string
+          # 4. Create data log string
           NEW_DATA="Date: $DATE | Total Clones: $COUNT | Unique Users: $UNIQUES"
           echo "$NEW_DATA" > clone-stats.txt
 
-          # 4. Use Git to force-create and push the traffic branch
+          # 5. Use Git to force-create and push the traffic branch
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@://github.com"
           
