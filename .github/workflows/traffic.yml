@@ -2,33 +2,49 @@ name: Repository Traffic
 
 on:
   schedule:
+    # Runs automatically on the 12th and 28th of the month at midnight UTC
     - cron: '0 0 12,28 * *'
-  workflow_dispatch:
+  workflow_dispatch: # Allows manual runs anytime
 
 jobs:
-  create-traffic-branch:
+  log-traffic:
     runs-on: ubuntu-latest
     steps:
-      # Automatically authenticates the repository workspace using your personal token
+      # Natively authenticates using your working Personal Access Token
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.TRAFFIC_TOKEN }}
 
-      - name: Force Create and Push Traffic Branch
+      - name: Fetch Data and Append to History Branch
+        env:
+          TRAFFIC_TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
         run: |
-          # 1. Configure git identity
+          # 1. Configure Git identity
           git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.email "github-actions[bot]@://github.com"
+
+          # 2. Fetch the live clone metrics from GitHub API
+          RESPONSE=$(curl -s -H "Authorization: Bearer $TRAFFIC_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://github.com")
+
+          # 3. Parse statistics out of the response
+          COUNT=$(echo "$RESPONSE" | python3 -c "import sys, json; print(json.load(sys.stdin).get('count', 0))")
+          UNIQUES=$(echo "$RESPONSE" | python3 -c "import sys, json; print(json.load(sys.stdin).get('uniques', 0))")
+          DATE=$(date -u +"%Y-%m-%d")
+
+          # 4. Format the row entry
+          NEW_ENTRY="Date: $DATE | Total Clones: $COUNT | Unique Cloners: $UNIQUES"
+
+          # 5. Switch to the traffic branch, pull down existing history, and append new line
+          git fetch origin traffic
+          git checkout traffic
           
-          # 2. Create a fresh, empty isolated branch named traffic
-          git checkout --orphan traffic
-          git rm -rf . --quiet
-          
-          # 3. Create a placeholder tracking log file
-          echo "Traffic history branch initialization: $(date)" > clone-stats.txt
-          
-          # 4. Stage, commit, and forcefully push the new branch to GitHub
+          # Append data row to the file
+          echo "$NEW_ENTRY" >> clone-stats.txt
+
+          # 6. Commit the appended data line back to the traffic branch
           git add clone-stats.txt
-          git commit -m "chore: initialize isolated traffic monitoring branch"
-          git push origin traffic --force
+          git commit -m "chore: log traffic metrics for $DATE"
+          git push origin traffic
