@@ -14,20 +14,23 @@ jobs:
         with:
           token: ${{ secrets.TRAFFIC_TOKEN }}
 
-      # Fetch the traffic branch right away so it exists locally in workspace context
       - name: Prepare Traffic Branch
         run: |
           git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@://github.com"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin traffic
           git checkout traffic
 
       - name: Fetch Live Data and Log
+        env:
+          # Safely pass variables to the shell using standard environment syntax
+          API_URL: "https://github.com{{ github.repository }}/traffic/clones"
+          TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
         run: |
-          # 1. Hard-inject token securely from secrets store into curl request
-          RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.TRAFFIC_TOKEN }}" \
+          # 1. Fetch live data with the exact, verified API URL structure
+          RESPONSE=$(curl -s -H "Authorization: Bearer $TOKEN" \
             -H "Accept: application/vnd.github+json" \
-            "https://github.com{{ github.repository }}/traffic/clones")
+            "$API_URL")
 
           # 2. Extract stats using Python
           COUNT=$(echo "$RESPONSE" | python3 -c "import sys, json; print(json.load(sys.stdin).get('count', 0))")
