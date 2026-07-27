@@ -23,14 +23,12 @@ jobs:
 
       - name: Fetch Live Data and Log
         env:
-          # Safely pass variables to the shell using standard environment syntax
-          API_URL: "https://github.com{{ github.repository }}/traffic/clones"
           TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
         run: |
-          # 1. Fetch live data with the exact, verified API URL structure
+          # 1. Fetch live data using the foolproof, built-in system variable ($GITHUB_REPOSITORY)
           RESPONSE=$(curl -s -H "Authorization: Bearer $TOKEN" \
             -H "Accept: application/vnd.github+json" \
-            "$API_URL")
+            "https://github.com")
 
           # 2. Extract stats using Python
           COUNT=$(echo "$RESPONSE" | python3 -c "import sys, json; print(json.load(sys.stdin).get('count', 0))")
