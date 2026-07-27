@@ -2,17 +2,47 @@ name: Repository Traffic
 
 on:
   schedule:
-    - cron: '0 0 15,30 * *' # Runs on the 1st and 15th of the month
-  workflow_dispatch: # Lets you run it manually whenever you want
+    # Runs every 12th and 28th of the month at midnight UTC
+    - cron: '0 0 12,28 * *'
+  workflow_dispatch:
 
 jobs:
-  run:
+  log-clones:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # Allows the tool to save the data
     steps:
-      - name: Sync Traffic
-        uses: sangonzal/repository-traffic-action@v0.1.5
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Fetch and Save Clone Data
         env:
-          # Automatically uses your built-in GitHub secret
-          TRAFFIC_ACTION_TOKEN: ${{ secrets.TRAFFIC_TOKEN }} 
+          TRAFFIC_TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          # 1. Fetch clone data from GitHub API
+          RESPONSE=$(curl -s -H "Authorization: token $TRAFFIC_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://github.com")
+          
+          # 2. Extract statistics
+          COUNT=$(echo "$RESPONSE" | python3 -c "import sys, json; print(json.load(sys.stdin).get('count', 0))")
+          UNIQUES=$(echo "$RESPONSE" | python3 -c "import sys, json; print(json.load(sys.stdin).get('uniques', 0))")
+          DATE=$(date -u +"%Y-%m-%d")
+
+          # 3. Create data log string
+          NEW_DATA="Date: $DATE | Total Clones: $COUNT | Unique Users: $UNIQUES"
+          echo "$NEW_DATA" > clone-stats.txt
+
+          # 4. Use Git to force-create and push the traffic branch
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@://github.com"
+          
+          # Switch authentication to use your working Personal Access Token
+          git remote set-url origin https://x-access-token:$TRAFFIC_TOKEN@://github.com
+          
+          # Create an isolated branch, commit the file, and force push it
+          git checkout --orphan traffic
+          git rm -rf .
+          echo "$NEW_DATA" > clone-stats.txt
+          git add clone-stats.txt
+          git commit -m "chore: log clone metrics for $DATE"
+          git push origin traffic --force
