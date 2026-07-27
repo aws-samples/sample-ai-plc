@@ -8,37 +8,39 @@ on:
 jobs:
   log-traffic:
     runs-on: ubuntu-latest
+    # Explicitly maps your token at the job level so it survives git branch checkouts
+    env:
+      SECURE_TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.TRAFFIC_TOKEN }}
 
-      - name: Prepare Traffic Branch
+      - name: Fetch Live Data and Log
         run: |
+          # 1. Configure Git identity
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@://github.com"
-          git fetch origin traffic
-          git checkout traffic
 
-      - name: Fetch Live Data and Log
-        env:
-          TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
-        run: |
-          # 1. Fetch live metrics directly from the official GitHub API database
-          RESPONSE=$(curl -s -H "Authorization: Bearer $TOKEN" \
+          # 2. Fetch the live metrics right now while on the main branch context
+          RESPONSE=$(curl -s -H "Authorization: Bearer $SECURE_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             "https://github.com")
 
-          # 2. Extract the official total and unique counts via Python
+          # 3. Safely parse out the counts
           TOTAL_CLONES=$(echo "$RESPONSE" | python3 -c "import sys, json; print(json.load(sys.stdin).get('count', 0))")
           UNIQUE_CLONERS=$(echo "$RESPONSE" | python3 -c "import sys, json; print(json.load(sys.stdin).get('uniques', 0))")
           DATE=$(date -u +"%Y-%m-%d")
 
-          # 3. Append the explicit, official counts straight into your log file
+          # 4. Switch over to the tracking branch
+          git fetch origin traffic
+          git checkout traffic
+
+          # 5. Append the exact official numbers to the text file
           echo "Date: $DATE | Total Clones: $TOTAL_CLONES | Unique Cloners: $UNIQUE_CLONERS" >> clone-stats.txt
 
-          # 4. Commit and push back up to the traffic branch
+          # 6. Commit and push changes back up
           git add clone-stats.txt
           git commit -m "chore: log official traffic metrics for $DATE"
           git push origin traffic
