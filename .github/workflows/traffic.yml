@@ -2,7 +2,7 @@ name: Repository Traffic
 
 on:
   schedule:
-    - cron: '0 0 1,15 * *' # Runs on the 1st and 15th of the month
+    - cron: '0 0 15,30 * *' # Runs on the 1st and 15th of the month
   workflow_dispatch: # Lets you run it manually whenever you want
 
 jobs:
