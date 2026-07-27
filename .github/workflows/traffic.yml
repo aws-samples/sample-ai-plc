@@ -15,4 +15,4 @@ jobs:
         uses: sangonzal/repository-traffic-action@v0.1.5
         env:
           # Automatically uses your built-in GitHub secret
-          TRAFFIC_ACTION_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          TRAFFIC_ACTION_TOKEN: ${{ secrets.TRAFFIC_TOKEN }} 
