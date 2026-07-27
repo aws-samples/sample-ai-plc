@@ -2,31 +2,36 @@ name: Repository Traffic
 
 on:
   schedule:
-    - cron: '0 0 12,28 * *'
-  workflow_dispatch:
+    - cron: '0 0 12,28 * *' # Runs on the 12th and 28th
+  workflow_dispatch: # Allows you to run it manually right now
 
 jobs:
-  log-clones:
+  create-traffic-branch:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Fetch and Debug Clone Data
+      - name: Force Create and Push Traffic Branch
         env:
           TRAFFIC_TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
           REPO: ${{ github.repository }}
         run: |
-          echo "==== TEST 1: Calling API ===="
-          RESPONSE=$(curl -s -v -H "Authorization: Bearer $TRAFFIC_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            "https://github.com")
+          # Configure git identity
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          echo "GitHub API Response Body:"
-          echo "$RESPONSE"
+          # Inject your working Personal Access Token for full write authentication
+          git remote set-url origin https://x-access-token:$TRAFFIC_TOKEN@://github.com
           
-          # Explicit safe exit to avoid hiding the actual error message
-          if [[ "$RESPONSE" == *"message"* ]]; then
-             echo "==== FAILED: GitHub rejected the token ===="
-             exit 1
-          fi
+          # Create a fresh, empty isolated branch named traffic
+          git checkout --orphan traffic
+          git rm -rf . --quiet
+          
+          # Create a placeholder tracking log file
+          echo "Traffic history branch initialization: $(date)" > clone-stats.txt
+          
+          # Stage, commit, and forcefully push the new branch to GitHub
+          git add clone-stats.txt
+          git commit -m "chore: initialize isolated traffic monitoring branch"
+          git push origin traffic --force
