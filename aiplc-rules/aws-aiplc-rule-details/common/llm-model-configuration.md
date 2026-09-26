@@ -6,14 +6,14 @@ Reference guide for correct LLM model IDs and API credential configuration acros
 ## AWS Bedrock Configuration
 
 ### Correct Model ID
-**ALWAYS use the cross-region inference profile for Claude Sonnet 4:**
+**ALWAYS use the cross-region inference profile for Claude Sonnet 4.5:**
 ```
-us.anthropic.claude-sonnet-4-20250514-v1:0
+us.anthropic.claude-sonnet-4-5-20250929-v1:0
 ```
 
 **DO NOT use the direct model ID** (will fail with on-demand throughput error):
 ```
-❌ anthropic.claude-sonnet-4-20250514-v1:0  (WRONG - causes ValidationException)
+❌ anthropic.claude-sonnet-4-5-20250929-v1:0  (WRONG - causes ValidationException)
 ```
 
 ### API Credentials
@@ -46,7 +46,7 @@ bearer_token = os.environ.get("AWS_BEARER_TOKEN_BEDROCK")
 
 # Use cross-region inference profile
 model = BedrockModel(
-    model_id="us.anthropic.claude-sonnet-4-20250514-v1:0",
+    model_id="us.anthropic.claude-sonnet-4-5-20250929-v1:0",
     region_name="us-west-2",
     temperature=0.7,
     max_tokens=2048,
@@ -57,25 +57,25 @@ model = BedrockModel(
 
 **Error: "This model version has reached the end of its life"**
 - Cause: Using deprecated model version (e.g., claude-3-5-sonnet-20241022-v2:0)
-- Solution: Use Claude Sonnet 4: `us.anthropic.claude-sonnet-4-20250514-v1:0`
+- Solution: Use Claude Sonnet 4.5: `us.anthropic.claude-sonnet-4-5-20250929-v1:0`
 
 **Error: "Invocation of model ID ... with on-demand throughput isn't supported"**
 - Cause: Using direct model ID instead of inference profile
-- Solution: Add `us.` prefix: `us.anthropic.claude-sonnet-4-20250514-v1:0`
+- Solution: Add `us.` prefix: `us.anthropic.claude-sonnet-4-5-20250929-v1:0`
 
 **Error: "ResourceNotFoundException" or "Access denied"**
 - Cause: Model access not enabled in Bedrock console
 - Solution: 
   1. Open AWS Bedrock Console
   2. Navigate to "Model access"
-  3. Enable "Claude Sonnet 4"
+  3. Enable "Claude Sonnet 4.5"
   4. Wait a few minutes for access to propagate
 
 ## Anthropic Direct Configuration
 
 ### Model ID
 ```
-claude-sonnet-4-20250514
+claude-sonnet-4-5-20250929
 ```
 
 ### API Credentials
@@ -91,7 +91,7 @@ import os
 
 model = AnthropicModel(
     client_args={"api_key": os.environ["ANTHROPIC_API_KEY"]},
-    model_id="claude-sonnet-4-20250514",
+    model_id="claude-sonnet-4-5-20250929",
     max_tokens=2048,
     params={"temperature": 0.7}
 )
@@ -180,8 +180,8 @@ model = LlamaAPIModel(
 
 | Provider | Model ID | Environment Variable | Get Key From |
 |----------|----------|---------------------|--------------|
-| AWS Bedrock | `us.anthropic.claude-sonnet-4-20250514-v1:0` | `AWS_BEARER_TOKEN_BEDROCK` or `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY` | AWS Bedrock Console |
-| Anthropic | `claude-sonnet-4-20250514` | `ANTHROPIC_API_KEY` | console.anthropic.com |
+| AWS Bedrock | `us.anthropic.claude-sonnet-4-5-20250929-v1:0` | `AWS_BEARER_TOKEN_BEDROCK` or `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY` | AWS Bedrock Console |
+| Anthropic | `claude-sonnet-4-5-20250929` | `ANTHROPIC_API_KEY` | console.anthropic.com |
 | OpenAI | `gpt-5-mini` or `gpt-5.1` | `OPENAI_API_KEY` | platform.openai.com/api-keys |
 | Google Gemini | `gemini-3-pro-preview` | `GOOGLE_API_KEY` | aistudio.google.com/apikey |
 | Meta Llama | `Llama-4-Maverick-17B-128E-Instruct-FP8` | `LLAMA_API_KEY` | llama.developer.meta.com |

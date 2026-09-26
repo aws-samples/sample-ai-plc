@@ -61,7 +61,7 @@ FROM SPECIFICATION:
 
 DEFAULTS FOR MISSING ITEMS:
 🔧 LLM Provider: [Not specified - need your input] (if agentic and not specified)
-🔧 LLM Model: Claude 3.5 Sonnet (default)
+🔧 LLM Model: Claude Sonnet 4.5 (default)
 🔧 Port: {3000 + X} (default, incremented for each prototype)
 🔧 Tools: {placeholder tools} (if not specified)
 🔧 Brand: Generic modern design (if not specified)
@@ -104,7 +104,7 @@ If use case is Agentic and LLM provider not specified:
 ```
 Which LLM provider would you like to use for {Use Case Name}?
 
-[A] AWS Bedrock (default - uses Claude Sonnet 4 via inference profile)
+[A] AWS Bedrock (default - uses Claude Sonnet 4.5 via inference profile)
 [B] Anthropic
 [C] OpenAI
 [D] Google Gemini
@@ -116,8 +116,8 @@ Which LLM provider would you like to use for {Use Case Name}?
 Record selection.
 
 **IMPORTANT: Set correct model based on provider:**
-- **AWS Bedrock**: Use `us.anthropic.claude-sonnet-4-20250514-v1:0` (cross-region inference profile)
-- **Anthropic**: Use `claude-sonnet-4-20250514`
+- **AWS Bedrock**: Use `us.anthropic.claude-sonnet-4-5-20250929-v1:0` (cross-region inference profile)
+- **Anthropic**: Use `claude-sonnet-4-5-20250929`
 - **OpenAI**: Use `gpt-5-mini` or `gpt-5.1`
 - **Google Gemini**: Use `gemini-3-pro-preview` or `gemini-2.5-pro`
 
