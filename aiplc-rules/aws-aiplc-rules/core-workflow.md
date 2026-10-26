@@ -15,7 +15,11 @@ The AI model intelligently assesses which Discovery stages are needed based on:
 ## MANDATORY: Rule Details Loading
 **CRITICAL**: When performing any phase, you MUST read and use relevant content from rule detail files.
 
-Rule details location: `./aws-aiplc-rule-details/`
+Rule details location (paths relative to the workspace root, matching the README setup for each tool):
+- **Kiro**: `.kiro/aws-aiplc-rule-details/` (this file is in `.kiro/steering/aws-aiplc-rules/`)
+- **Claude Code and other tools**: `./aws-aiplc-rule-details/` (this file is the workspace's `CLAUDE.md` or equivalent)
+
+Use whichever of the two directories exists. If neither exists, tell the user the rule details are missing and point them to the setup steps in the README — do not continue without them. All rule paths in these rules (`common/...`, `discovery/...`, `inception/...`) are relative to that directory.
 
 **Common Rules**: ALWAYS load common rules at workflow start:
 - Load `common/process-overview.md` for workflow overview
