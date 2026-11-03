@@ -61,7 +61,7 @@ FROM SPECIFICATION:
 
 DEFAULTS FOR MISSING ITEMS:
 🔧 LLM Provider: [Not specified - need your input] (if agentic and not specified)
-🔧 LLM Model: Claude Sonnet 4.5 (default)
+🔧 LLM Model: Newest active Claude Sonnet (default — exact ID resolved in Step 2.4)
 🔧 Port: {3000 + X} (default, incremented for each prototype)
 🔧 Tools: {placeholder tools} (if not specified)
 🔧 Brand: Generic modern design (if not specified)
@@ -104,7 +104,7 @@ If use case is Agentic and LLM provider not specified:
 ```
 Which LLM provider would you like to use for {Use Case Name}?
 
-[A] AWS Bedrock (default - uses Claude Sonnet 4.5 via inference profile)
+[A] AWS Bedrock (default - newest active Claude Sonnet via an inference profile for your region)
 [B] Anthropic
 [C] OpenAI
 [D] Google Gemini
@@ -115,11 +115,11 @@ Which LLM provider would you like to use for {Use Case Name}?
 
 Record selection.
 
-**IMPORTANT: Set correct model based on provider:**
-- **AWS Bedrock**: Use `us.anthropic.claude-sonnet-4-5-20250929-v1:0` (cross-region inference profile)
-- **Anthropic**: Use `claude-sonnet-4-5-20250929`
-- **OpenAI**: Use `gpt-5-mini` or `gpt-5.1`
-- **Google Gemini**: Use `gemini-3-pro-preview` or `gemini-2.5-pro`
+**IMPORTANT: Resolve the model ID with `common/llm-model-configuration.md`** — never from memory or from an example in another file:
+- **AWS Bedrock**: Ask for the AWS region, then resolve the inference profile ID that exists in that region (geographic prefix or `global.`)
+- **Anthropic**: Newest Claude Sonnet model, confirmed with the user
+- **Other providers**: Ask the user for the model ID
+- Do not set `temperature`, `top_p`, or `top_k` for Claude models
 
 ### Step 2.5: API Key Check and Request
 
@@ -172,12 +172,12 @@ Then show the appropriate commands based on provider:
 **For Bedrock:**
 ```
 **macOS / Linux:**
-  export AWS_DEFAULT_REGION=us-west-2
+  export AWS_DEFAULT_REGION=your-region   # e.g. us-west-2, ap-northeast-2
   export AWS_ACCESS_KEY_ID=paste-your-key-here
   export AWS_SECRET_ACCESS_KEY=paste-your-secret-here
 
 **Windows (PowerShell):**
-  $env:AWS_DEFAULT_REGION="us-west-2"
+  $env:AWS_DEFAULT_REGION="your-region"   # e.g. us-west-2, ap-northeast-2
   $env:AWS_ACCESS_KEY_ID="paste-your-key-here"
   $env:AWS_SECRET_ACCESS_KEY="paste-your-secret-here"
 
@@ -300,7 +300,7 @@ Before building, detect the environment and configure Strands accordingly:
 
 **PROTOTYPE ENVIRONMENT RULES** (applies to Path 2 only — Kiro Power handles isolation internally):
 - Always create a virtual environment (`python -m venv .venv`) before installing any packages — never install to the system Python
-- Pin package versions when installing (e.g., `pip install strands-agents==0.1.x flask==3.x.x`) — use latest stable versions available
+- Install the current stable release of each package (do not copy version numbers from these rules — they go stale), then record the exact resolved versions with `pip freeze > requirements.txt` so the prototype can be reproduced
 - Only install packages from PyPI (the official Python package index) — never install from arbitrary URLs or git repos
 - Prototypes run locally only (localhost) — do not expose ports to the network or deploy to remote servers
 - Do not install packages or run code that requires root/sudo permissions
@@ -319,7 +319,7 @@ B) Let's ride — I trust you, AI. Install whatever you need and let's build thi
 ```
 
 - If [A] Mock: Build frontend with hardcoded mock responses simulating the agent. Skip Strands installation entirely. Mark prototype as "UI Prototype — Agent Mocked" in iteration log.
-- If [B] Ride: Create a virtual environment first (`python -m venv .venv && source .venv/bin/activate`), then install with pinned versions: `pip install strands-agents==1.39.0 strands-agents-tools==0.5.2 flask==3.1.3 flask-cors==6.0.2`. Do NOT install to system Python. Proceed with full build.
+- If [B] Ride: Create a virtual environment first (`python -m venv .venv && source .venv/bin/activate`), then install the current stable releases: `pip install strands-agents strands-agents-tools flask flask-cors`, and record the resolved versions with `pip freeze > requirements.txt`. Do NOT install to system Python. Proceed with full build.
 
 ---
 
